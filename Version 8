@@ -2,12 +2,9 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter.ttk import Combobox
 
-
 root = Tk()
 root.title("Julies Hire Store")
 root.geometry("600x600")
-root.configure(bg="lightblue")
-
 
 Hired_details = []
 counters = {
@@ -16,9 +13,9 @@ counters = {
     'name_count': 0
 }
 
+
 def quit():
     root.destroy()
-
 
 def print_Hired_details():
     global detail_window
@@ -28,35 +25,33 @@ def print_Hired_details():
         pass
 
     detail_window = Toplevel(root)
-    detail_window.title("All the items hired Details ")
+    detail_window.title("All the items hired Details")
     detail_window.geometry("600x600")
-    detail_window.configure(bg="lightblue")
 
-    name_count = 0
-    Label(detail_window, font=("Helvetica", 12, "bold"), text="Name", fg="white", bg="black", relief="sunken", bd=5).grid(column=1, row=0, padx=5, pady=5)
-    Label(detail_window, font=("Helvetica", 12, "bold"), text="Items Hired Name", fg="white", bg="black", relief="ridge", bd=5).grid(column=2, row=0, padx=5, pady=5)
-    Label(detail_window, font=("Helvetica", 12, "bold"), text="Total number of items hired", fg="white", bg="black", relief="groove", bd=5).grid(column=3, row=0, padx=5, pady=5)
-    Label(detail_window, font=("Helvetica", 12, "bold"), text="Receipt Number", fg="white", bg="black", relief="raised", bd=5).grid(column=4, row=0, padx=5, pady=5)
+    Label(detail_window, text="Name", font=("Helvetica", 12, "bold")).grid(column=1, row=0, padx=5, pady=5)
+    Label(detail_window, text="Items Hired Name", font=("Helvetica", 12, "bold")).grid(column=2, row=0, padx=5, pady=5)
+    Label(detail_window, text="Total number of items hired", font=("Helvetica", 12, "bold")).grid(column=3, row=0, padx=5, pady=5)
+    Label(detail_window, text="Receipt Number", font=("Helvetica", 12, "bold")).grid(column=4, row=0, padx=5, pady=5)
 
     for name_count, item in enumerate(Hired_details):
-        Label(detail_window, text=item[0], relief="sunken", font=("Helvetica", 10), fg="blue", bg="white").grid(column=1, row=name_count+1, padx=5, pady=5)
-        Label(detail_window, text=item[1], relief="sunken", font=("Helvetica", 10), fg="blue", bg="white").grid(column=2, row=name_count+1, padx=5, pady=5)
-        Label(detail_window, text=item[2], relief="sunken", font=("Helvetica", 10), fg="blue", bg="white").grid(column=3, row=name_count+1, padx=5, pady=5)
-        Label(detail_window, text=item[3], relief="sunken", font=("Helvetica", 10), fg="blue", bg="white").grid(column=4, row=name_count+1, padx=5, pady=5)
+        Label(detail_window, text=item[0], font=("Helvetica", 10)).grid(column=1, row=name_count+1, padx=5, pady=5)
+        Label(detail_window, text=item[1], font=("Helvetica", 10)).grid(column=2, row=name_count+1, padx=5, pady=5)
+        Label(detail_window, text=item[2], font=("Helvetica", 10)).grid(column=3, row=name_count+1, padx=5, pady=5)
+        Label(detail_window, text=item[3], font=("Helvetica", 10)).grid(column=4, row=name_count+1, padx=5, pady=5)
     counters['name_count'] = name_count
 
 
 def check_inputs():
     error_messages = []
 
-    if len(entry_name.get()) == 0 or not entry_name.get().isalpha():
-        error_messages.append("• Name is required and must only contain letters")
+    if len(entry_name.get()) == 0:
+        error_messages.append("• Name cannot be blank!")
 
-    if len(entry_Hired_items.get()) == 0 or not entry_Hired_items.get().isalpha():
-        error_messages.append("• Hired Item is required and must only contain letters")
+    if len(entry_Hired_items.get()) == 0:
+        error_messages.append("• Hired Item cannot be blank!")
 
     if not entry_items_number.get().isdigit():
-        error_messages.append("• Item number must be a positive integer!")
+        error_messages.append("• Item number must be an integer!")
     else:
         item_number = int(entry_items_number.get())
         if item_number == 0:
@@ -67,11 +62,12 @@ def check_inputs():
     else:
         append_name()
 
+
 def append_name():
     receipt_number = counters['receipt_number']
     Hired_details.append([entry_name.get(), entry_Hired_items.get(), receipt_number, entry_items_number.get()])
     entry_name.delete(0, 'end')
-    entry_Hired_items.set('')  
+    entry_Hired_items.set('')
     entry_items_number.delete(0, 'end')
     counters['total_entries'] += 1
     counters['receipt_number'] += 1
@@ -88,7 +84,6 @@ def delete_item(receipt_number):
     messagebox.showwarning("Warning", "Receipt number not found.")
     delete_window.destroy()
 
-
 def delete_by_receipt():
     global delete_window
     try:
@@ -99,32 +94,42 @@ def delete_by_receipt():
     delete_window = Toplevel(root)
     delete_window.title("Delete item by receipt number")
     delete_window.geometry("250x100")
-    delete_window.configure(bg="lightblue")
 
     Label(delete_window, text="Enter Receipt Number:").pack()
     receipt_entry = Entry(delete_window)
     receipt_entry.pack()
     Button(delete_window, text="Delete", command=lambda: delete_item(receipt_entry.get())).pack()
 
+def validate_input(char):
+    return char.isalpha()
 
-Label(root, text="Julies Hire Store", font=("Helvetica", 16, "bold"), bg="lightblue").grid(row=0, column=1, columnspan=2, pady=10)
 
-Label(root, text="Customer Name:", bg="lightblue").grid(row=1, column=0, sticky=E)
-entry_name = Entry(root)
+def validate_integer(char):
+    return char.isdigit()
+
+
+
+Label(root, text="Julies Hire Store", font=("Helvetica", 16, "bold")).grid(row=0, column=1, columnspan=2, pady=10)
+
+Label(root, text="Customer Name:").grid(row=1, column=0, sticky=E)
+
+validate_name_cmd = root.register(validate_input)
+entry_name = Entry(root, validate="key", validatecommand=(validate_name_cmd, "%S"))
 entry_name.grid(row=1, column=1)
 
-Label(root, text="Item Hired:", bg="lightblue").grid(row=2, column=0, sticky=E)
-entry_Hired_items = Combobox(root, values=["Item1", "Item2", "Item3"]) 
+Label(root, text="Item Hired:").grid(row=2, column=0, sticky=E)
+
+validate_integer_cmd = root.register(validate_integer)
+entry_Hired_items = Combobox(root, values=["Item1", "Item2", "Item3"])
 entry_Hired_items.grid(row=2, column=1)
 
-Label(root, text="Item Number:", bg="lightblue").grid(row=3, column=0, sticky=E)
-entry_items_number = Entry(root)
+Label(root, text="Item Number:").grid(row=3, column=0, sticky=E)
+entry_items_number = Entry(root, validate="key", validatecommand=(validate_integer_cmd, "%S"))
 entry_items_number.grid(row=3, column=1)
 
 Button(root, text="Add Hired Item", command=check_inputs).grid(row=4, column=0, columnspan=2, pady=10)
 Button(root, text="Print Hired Details", command=print_Hired_details).grid(row=5, column=0, columnspan=2, pady=10)
 Button(root, text="Delete by Receipt", command=delete_by_receipt).grid(row=6, column=0, columnspan=2, pady=10)
 Button(root, text="Quit", command=quit).grid(row=7, column=0, columnspan=2, pady=10)
-
 
 root.mainloop()
