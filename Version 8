@@ -108,25 +108,23 @@ def validate_integer(char):
     return char.isdigit()
 
 
-
-Label(root, text="Julies Hire Store", font=("Helvetica", 16, "bold")).grid(row=0, column=1, columnspan=2, pady=10)
-
-Label(root, text="Customer Name:").grid(row=1, column=0, sticky=E)
-
-validate_name_cmd = root.register(validate_input)
 entry_name = Entry(root, validate="key", validatecommand=(validate_name_cmd, "%S"))
 entry_name.grid(row=1, column=1)
 
-Label(root, text="Item Hired:").grid(row=2, column=0, sticky=E)
 
 validate_integer_cmd = root.register(validate_integer)
 entry_Hired_items = Combobox(root, values=["Item1", "Item2", "Item3"])
 entry_Hired_items.grid(row=2, column=1)
 
-Label(root, text="Item Number:").grid(row=3, column=0, sticky=E)
+
 entry_items_number = Entry(root, validate="key", validatecommand=(validate_integer_cmd, "%S"))
 entry_items_number.grid(row=3, column=1)
 
+def setup_buttons():
+Label(root, text="Julies Hire Store", font=("Helvetica", 16, "bold")).grid(row=0, column=1, columnspan=2, pady=10)
+Label(root, text="Full Name:").grid(row=1, column=0, sticky=E)
+Label(root, text="Item Hired:").grid(row=2, column=0, sticky=E)
+Label(root, text="Item Number:").grid(row=3, column=0, sticky=E)
 Button(root, text="Add Hired Item", command=check_inputs).grid(row=4, column=0, columnspan=2, pady=10)
 Button(root, text="Print Hired Details", command=print_Hired_details).grid(row=5, column=0, columnspan=2, pady=10)
 Button(root, text="Delete by Receipt", command=delete_by_receipt).grid(row=6, column=0, columnspan=2, pady=10)
