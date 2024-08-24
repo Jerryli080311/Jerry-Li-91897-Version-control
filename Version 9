@@ -1,6 +1,8 @@
-from tkinter import ttk  # Import ttk for combobox
-import tkinter.messagebox as messagebox  # Import messagebox for showing warnings
-import random  # Import random for generating random receipt numbers
+
+from tkinter import *
+from tkinter import ttk  
+import tkinter.messagebox as messagebox  
+import random  
 
 root = Tk()
 
@@ -83,7 +85,7 @@ def check_inputs():
 
 
 def append_name():
-    receipt_number = random.randint(1, 100)  # Generate a random receipt number
+    receipt_number = random.randint(1, 100)  
     Hired_details.append([
         entry_name.get(),
         entry_Hired_items.get(),
@@ -115,8 +117,8 @@ def open_append_window():
     Label(frame, text="Item Hired").grid(column=0, row=1, sticky=E, pady=5)
     Label(frame, text="Item Number").grid(column=0, row=2, sticky=E, pady=5)
 
-    entry_name = Entry(frame, width=20, validate='key')
-    entry_name['validatecommand'] = (entry_name.register(validate_input), '%S')
+    validate_name_cmd = root.register(validate_input)
+    entry_name = Entry(frame, width=20, validate="key", validatecommand=(validate_name_cmd, "%S"))
     entry_name.grid(column=1, row=0, pady=5)
 
     entry_Hired_items = ttk.Combobox(frame,
@@ -125,8 +127,8 @@ def open_append_window():
                                      width=18)
     entry_Hired_items.grid(column=1, row=1, pady=5)
 
-    entry_items_number = Entry(frame, width=20, validate='key')
-    entry_items_number['validatecommand'] = (entry_items_number.register(validate_integer), '%S')
+    validate_integer_cmd = root.register(validate_integer)
+    entry_items_number = Entry(frame, width=20, validate="key", validatecommand=(validate_integer_cmd, "%S"))
     entry_items_number.grid(column=1, row=2, pady=5)
 
     Button(frame, text="Append", command=check_inputs).grid(column=1,
@@ -143,8 +145,8 @@ def open_delete_window():
 
     Label(delete_window, text="Receipt # to delete").grid(column=0, row=0, sticky=E)
 
-    delete_item = Entry(delete_window, width=20, validate='key')
-    delete_item['validatecommand'] = (delete_item.register(validate_integer), '%S')
+    validate_delete_cmd = root.register(validate_integer)
+    delete_item = Entry(delete_window, width=20, validate="key", validatecommand=(validate_delete_cmd, "%S"))
     delete_item.grid(column=1, row=0)
 
     Button(delete_window, text="Delete Row", command=delete_row, width=10).grid(column=1, row=1, pady=10)
@@ -156,7 +158,7 @@ def delete_row():
         return
     receipt_to_delete = int(delete_item.get())
     for i, details in enumerate(Hired_details):
-        if details[3] == receipt_to_delete:  # Use index 3 for receipt number
+        if details[3] == receipt_to_delete:  
             del Hired_details[i]
             counters['total_entries'] -= 1
             break
