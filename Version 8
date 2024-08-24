@@ -129,7 +129,7 @@ entry_name = Entry(root, validate="key", validatecommand=(validate_name_cmd, "%S
 entry_name.grid(row=1, column=1)
 
 
-entry_Hired_items = Combobox(root, values=["Item1", "Item2", "Item3"])
+entry_Hired_items = Combobox(root, values=["Chair", "Fork", "Ballon"])
 entry_Hired_items.grid(row=2, column=1)
 
 validate_integer_cmd = root.register(validate_integer)
