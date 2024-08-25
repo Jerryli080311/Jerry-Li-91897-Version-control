@@ -1,0 +1,251 @@
+
+from tkinter import *
+from tkinter import ttk  
+import tkinter.messagebox as messagebox  
+import random  
+
+root = Tk()
+
+counters = {'total_entries': 0, 'name_count': 0}
+Hired_details = []
+
+
+def quit():
+    root.destroy()
+
+def save_Hired_details():
+    with open("Hired_details.txt", "w") as file:
+        for detail in Hired_details:
+            file.write(f"{detail[0]}, {detail[1]}, {detail[2]}, {detail[3]}\n")
+    print("Hired details have been saved successfully.")
+    messagebox.showinfo("Success", "Hired details have been saved to Hired_details.txt.")
+
+
+def set_background_image(window, image_path):
+    bg_image = PhotoImage(file=image_path)  
+    bg_label = Label(window, image=bg_image)  
+    bg_label.place(relwidth=1, relheight=1)  
+    window.bg_image = bg_image
+    
+def print_Hired_details():
+    global detail_window
+    try:
+        detail_window.destroy()
+    except:
+        pass
+
+    detail_window = Toplevel(root)
+    detail_window.title("All the items hired Details ")
+    detail_window.geometry("400x400")
+    set_background_image(detail_window, "image.png")
+    
+    main_frame = Frame(detail_window)  
+    main_frame.pack(side=TOP, fill=BOTH, expand=True)
+
+    bottom_frame = Frame(detail_window) 
+    bottom_frame.pack(side=BOTTOM, fill=X)
+
+    counters = {'total_entries': 0, 'name_count': 0} 
+    name_count = 0
+    Label(main_frame,
+          font=("Helvetica", 12, "bold"),
+          text="First Name").grid(column=1, row=0, padx=5, pady=5)
+    Label(main_frame,
+          font=("Helvetica", 12, "bold"),
+          text="Last Name").grid(column=2, row=0, padx=5, pady=5)
+    Label(main_frame,
+          font=("Helvetica", 12, "bold"),
+          text="Items Hired",).grid(column=3, row=0, padx=5, pady=5)
+    Label(main_frame,
+          font=("Helvetica", 12, "bold"),
+          text="Number of Items",
+          ).grid(column=4, row=0, padx=5, pady=5)
+    Label(main_frame,
+          font=("Helvetica", 12, "bold"),
+          text="Receipt #",
+          ).grid(column=5, row=0, padx=5, pady=5)
+
+    for name_count, item in enumerate(Hired_details):
+        Label(main_frame,
+              text=item[0]).grid(column=1, row=name_count + 1, padx=5, pady=5)
+        Label(main_frame,
+              text=item[1]).grid(column=2, row=name_count + 1, padx=5, pady=5)
+        Label(main_frame,
+              text=item[2]).grid(column=3, row=name_count + 1, padx=5, pady=5)
+        Label(main_frame,
+              text=item[3]).grid(column=4, row=name_count + 1, padx=5, pady=5)
+        Label(main_frame,
+              text=item[4]).grid(column=5, row=name_count + 1, padx=5, pady=5)
+    counters['name_count'] = name_count
+
+    Button(bottom_frame,text="Back", command=close_detail_window).pack(pady=10)
+def validate_input(char):
+    return char.isalpha()
+
+
+def validate_integer(char):
+    return char.isdigit()
+
+
+def check_inputs():
+    error_messages = []
+    if len(entry_name.get()) == 0:
+        error_messages.append("• Name cannot be blank!")
+
+    if len(entry_last_name.get()) == 0:
+        error_messages.append("• Last Name cannot be blank!")
+
+    if len(entry_Hired_items.get()) == 0:
+        error_messages.append("• Hired Item cannot be blank!")
+
+    if not entry_items_number.get().isdigit():
+        error_messages.append("• Item number must be an integer!")
+    else:
+        item_number = int(entry_items_number.get())
+        if item_number == 0:
+            error_messages.append("• Item number cannot be 0!")
+
+    if error_messages:
+        messagebox.showwarning("Warning", "\n".join(error_messages))
+    else:
+        append_name()
+
+
+def append_name():
+    receipt_number = random.randint(1, 100)  
+    Hired_details.append([
+        entry_name.get(),
+        entry_last_name.get(),
+        entry_Hired_items.get(),
+        entry_items_number.get(),
+        receipt_number
+    ])
+    save_Hired_details() 
+    entry_name.delete(0, 'end')
+    entry_last_name.delete(0, 'end')
+    entry_Hired_items.set('')
+    entry_items_number.delete(0, 'end')
+    new_window.destroy()
+    
+
+
+
+def open_append_window():
+    global new_window, entry_name,entry_last_name, entry_Hired_items, entry_items_number
+
+    new_window = Toplevel(root)
+    new_window.title("Append Details")
+    new_window.geometry("400x400")
+    set_background_image(new_window, "image.png")
+
+    new_window.grid_columnconfigure(0, weight=1)
+    new_window.grid_columnconfigure(2, weight=1)
+    
+    frame = Frame(new_window)
+    frame.grid(column=1, row=0, pady=20)
+
+    Label(frame, text="First Name").grid(column=0, row=0, sticky=E, pady=5)
+    Label(frame, text="Last Name").grid(column=0, row=1, sticky=E, pady=5)
+    Label(frame, text="Item Hired").grid(column=0, row=2, sticky=E, pady=5)
+    Label(frame, text="Item Number").grid(column=0, row=3, sticky=E, pady=5)
+
+    validate_name_cmd = root.register(validate_input)
+    entry_name = Entry(frame, width=20, validate="key", validatecommand=(validate_name_cmd, "%S"))
+    entry_name.grid(column=1, row=0, pady=5)
+
+    validate_last_name_cmd = root.register(validate_input)
+    entry_last_name = Entry(frame, width=20, validate="key", validatecommand=(validate_last_name_cmd, "%S"))
+    entry_last_name.grid(column=1, row=1, pady=5)
+
+    entry_Hired_items = ttk.Combobox(frame,
+                                     values=["Chair", "Fork", "Balloons"],
+                                     state="readonly",
+                                     width=18)
+    entry_Hired_items.grid(column=1, row=2, pady=5)
+
+    validate_integer_cmd = root.register(validate_integer)
+    entry_items_number = Entry(frame, width=20, validate="key", validatecommand=(validate_integer_cmd, "%S"))
+    entry_items_number.grid(column=1, row=3, pady=5)
+
+    Button(frame, text="Submit", command=check_inputs).grid(column=1,
+                                                            row=4,
+                                                            pady=10)
+    Button(frame, text="Back", command=close_new_window).grid(column=1, row=5, pady=10)
+
+
+def open_delete_window():
+    global delete_window, delete_item
+
+    delete_window = Toplevel(root)
+    delete_window.title("Delete Detail")
+    delete_window.geometry("400x400")
+    set_background_image(delete_window, "image.png")
+
+    delete_window.grid_columnconfigure(0, weight=1)  
+    delete_window.grid_columnconfigure(1, weight=2)
+
+    frame = Frame(delete_window)
+    frame.grid(column=0, row=0,padx=20, pady=20, sticky='nsew')
+    
+    Label(frame, text="Receipt # to delete").grid(column=0, row=0, sticky=E, padx=5,pady=5)
+
+    validate_delete_cmd = root.register(validate_integer)
+    delete_item = Entry(frame, width=20, validate="key", validatecommand=(validate_delete_cmd, "%S"))
+    delete_item.grid(column=1, row=0, padx=5, pady=5)
+
+    Button(frame, text="Delete Row", command=delete_row, width=10).grid(column=1, row=1, pady=10)
+    Button(frame, text="Back", command=close_delete_window).grid(column=1, row=2, pady=10, sticky=W)
+
+
+def delete_row():
+    if not delete_item.get().isdigit():
+        messagebox.showwarning("Warning", "Receipt number must be an integer!")
+        return
+    receipt_to_delete = int(delete_item.get())
+    for i, details in enumerate(Hired_details):
+        if details[4] == receipt_to_delete:  
+            del Hired_details[i]
+            counters['total_entries'] -= 1
+            break
+    delete_item.delete(0, 'end')
+    delete_window.destroy()
+    messagebox.showinfo("Success", "Your hired details have been deleted successfully.")
+
+
+def close_new_window():
+    new_window.destroy()
+    
+
+def close_detail_window():
+    detail_window.destroy()
+    
+
+def close_delete_window():
+    delete_window.destroy()
+    
+def setup_buttons():
+
+    main_frame = Frame(root)  
+    main_frame.pack(expand=True)
+    
+    Label(main_frame, text="Welcome to Julian's Hire Shop", font=("Helvetica", 16, "bold")).grid(column=1, row=0, pady=10)
+    Button(main_frame, text="Append Detail", command=open_append_window, width=20).grid(column=1, row=1, pady=10)
+    Button(main_frame, text="Print Details", command=print_Hired_details, width=20).grid(column=1, row=2, pady=10)
+    Button(main_frame, text="Delete Detail", command=open_delete_window, width=20).grid(column=1, row=3, pady=10)
+    Button(main_frame, text="Quit", command=quit, width=20).grid(column=1, row=4, pady=10)
+
+
+def main():
+    root.title("Julie's Hire Store")
+    root.geometry("400x400")
+    root.grid_columnconfigure(0, weight=1)
+    root.grid_columnconfigure(2, weight=1)
+
+    bg_image = PhotoImage(file="image.png")
+    bg_label = Label(root, image=bg_image)
+    bg_label.place(relwidth=1, relheight=1)
+    
+    setup_buttons()
+    root.mainloop()
+
+main()
